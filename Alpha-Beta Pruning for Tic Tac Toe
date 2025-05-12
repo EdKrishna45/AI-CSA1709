@@ -1,0 +1,117 @@
+
+import math
+
+def print_board(board):
+    print("\n")
+    for row in board:
+        print(" | ".join(row))
+        print("-" * 9)
+
+def is_winner(board, player):
+    # Rows, Columns, Diagonals
+    for row in board:
+        if all(cell == player for cell in row):
+            return True
+    for col in range(3):
+        if all(board[r][col] == player for r in range(3)):
+            return True
+    if all(board[i][i] == player for i in range(3)):
+        return True
+    if all(board[i][2 - i] == player for i in range(3)):
+        return True
+    return False
+
+def is_full(board):
+    return all(cell != " " for row in board for cell in row)
+
+def get_empty_cells(board):
+    return [(r, c) for r in range(3) for c in range(3) if board[r][c] == " "]
+
+def alphabeta(board, depth, alpha, beta, is_maximizing):
+    if is_winner(board, "O"):
+        return 1
+    elif is_winner(board, "X"):
+        return -1
+    elif is_full(board):
+        return 0
+
+    if is_maximizing:
+        max_eval = -math.inf
+        for (r, c) in get_empty_cells(board):
+            board[r][c] = "O"
+            eval = alphabeta(board, depth + 1, alpha, beta, False)
+            board[r][c] = " "
+            max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)
+            if beta <= alpha:
+                break  # Beta cutoff
+        return max_eval
+    else:
+        min_eval = math.inf
+        for (r, c) in get_empty_cells(board):
+            board[r][c] = "X"
+            eval = alphabeta(board, depth + 1, alpha, beta, True)
+            board[r][c] = " "
+            min_eval = min(min_eval, eval)
+            beta = min(beta, eval)
+            if beta <= alpha:
+                break  # Alpha cutoff
+        return min_eval
+
+def best_move(board):
+    best_score = -math.inf
+    move = None
+    for (r, c) in get_empty_cells(board):
+        board[r][c] = "O"
+        score = alphabeta(board, 0, -math.inf, math.inf, False)
+        board[r][c] = " "
+        if score > best_score:
+            best_score = score
+            move = (r, c)
+    return move
+
+def play_game():
+    board = [[" " for _ in range(3)] for _ in range(3)]
+    print("Tic Tac Toe — AI with Alpha-Beta Pruning")
+    print("You are 'X' and AI is 'O'")
+    print_board(board)
+
+    while True:
+        # Human move
+        while True:
+            try:
+                row, col = map(int, input("Enter your move (1-3 1-3): ").split())
+                row -= 1
+                col -= 1
+                if board[row][col] == " ":
+                    board[row][col] = "X"
+                    break
+                else:
+                    print("That spot is already taken.")
+            except:
+                print("Invalid input.")
+
+        print_board(board)
+
+        if is_winner(board, "X"):
+            print("🎉 You win!")
+            break
+        if is_full(board):
+            print("It's a tie!")
+            break
+
+        # AI move
+        print("AI is thinking...")
+        r, c = best_move(board)
+        board[r][c] = "O"
+        print_board(board)
+
+        if is_winner(board, "O"):
+            print("AI wins!")
+            break
+        if is_full(board):
+            print("It's a tie!")
+            break
+
+if __name__ == "__main__":
+    play_game()
