@@ -1,0 +1,23 @@
+% student(Name, RollNumber).
+student(john, 101).
+student(mary, 102).
+student(sam, 103).
+student(alice, 104).
+
+% teacher(Name, TeacherID).
+teacher(mr_smith, t1).
+teacher(ms_clark, t2).
+teacher(dr_adams, t3).
+
+% subject(SubCode, SubjectName, TeacherID).
+subject(cse101, 'Computer Science', t1).
+subject(mat102, 'Mathematics', t2).
+subject(phy103, 'Physics', t3).
+
+% enrolled(RollNumber, SubCode).
+enrolled(101, cse101).
+enrolled(101, mat102).
+enrolled(102, mat102).
+enrolled(102, phy103).
+enrolled(103, cse101).
+enrolled(104, phy103).
