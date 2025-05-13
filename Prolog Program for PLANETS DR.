@@ -1,0 +1,10 @@
+% planet(Name, DistanceFromSun_MillionKm, Diameter_Km, Moons, HasRings).
+
+planet(mercury, 58, 4879, 0, no).
+planet(venus, 108, 12104, 0, no).
+planet(earth, 150, 12742, 1, no).
+planet(mars, 228, 6779, 2, no).
+planet(jupiter, 778, 139820, 79, yes).
+planet(saturn, 1430, 116460, 83, yes).
+planet(uranus, 2870, 50724, 27, yes).
+planet(neptune, 4495, 49244, 14, yes).
