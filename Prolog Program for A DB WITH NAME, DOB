@@ -1,0 +1,8 @@
+% Facts: name(Name, DateOfBirth).
+% DateOfBirth format: dob(Year, Month, Day)
+
+person(john, dob(1990, 5, 23)).
+person(mary, dob(1985, 12, 3)).
+person(alex, dob(2000, 1, 15)).
+person(sophia, dob(1995, 7, 30)).
+person(david, dob(1988, 9, 10)).
