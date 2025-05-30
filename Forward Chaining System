@@ -1,0 +1,77 @@
+% --- Dynamic predicates ---
+:- dynamic known/1.
+
+% --- Initial Facts ---
+fact(has_feathers).
+fact(lays_eggs).
+fact(has_milk).
+fact(eats_meat).
+fact(has_fur).
+fact(has_claws).
+fact(has_sharp_teeth).
+
+% --- Inference Rules ---
+
+% Rule: If has_feathers and lays_eggs then it's a bird
+rule(bird) :-
+    known(has_feathers),
+    known(lays_eggs),
+    \+ known(bird),
+    assertz(known(bird)),
+    write('Inferred: bird'), nl.
+
+% Rule: If has_fur and has_milk then it's a mammal
+rule(mammal) :-
+    known(has_fur),
+    known(has_milk),
+    \+ known(mammal),
+    assertz(known(mammal)),
+    write('Inferred: mammal'), nl.
+
+% Rule: If mammal and eats_meat and has_claws and has_sharp_teeth, then it's a carnivore
+rule(carnivore) :-
+    known(mammal),
+    known(eats_meat),
+    known(has_claws),
+    known(has_sharp_teeth),
+    \+ known(carnivore),
+    assertz(known(carnivore)),
+    write('Inferred: carnivore'), nl.
+
+% Rule: If bird and lays_eggs then it may be a reptile too (example overlap)
+rule(reptile) :-
+    known(lays_eggs),
+    \+ known(reptile),
+    assertz(known(reptile)),
+    write('Inferred: reptile'), nl.
+
+% --- Inference Engine (Forward Chaining) ---
+
+forward :-
+    apply_rules,
+    write('All inferences complete.'), nl.
+
+% Applies all rules until no more inferences can be made
+apply_rules :-
+    (   rule(_) -> apply_rules ; true).
+
+% --- Ask user to assert initial facts interactively ---
+initialize :-
+    clear_facts,
+    ask_all_facts,
+    forward.
+
+ask_all_facts :-
+    findall(Fact, fact(Fact), Facts),
+    ask_facts(Facts).
+
+ask_facts([]).
+ask_facts([H|T]) :-
+    format('Do you know: ~w? (yes/no) ', [H]),
+    read(Response),
+    (Response == yes -> assertz(known(H)) ; true),
+    ask_facts(T).
+
+% --- Clear knowledge base ---
+clear_facts :-
+    retractall(known(_)).
