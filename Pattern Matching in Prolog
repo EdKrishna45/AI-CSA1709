@@ -1,0 +1,30 @@
+% --- Match identical atoms
+match(X, X) :-
+    atomic(X), !.
+
+% --- Match variable in pattern
+match(var(_), _) :- !.
+
+% --- Match lists
+match([], []).
+match([PH|PT], [IH|IT]) :-
+    match(PH, IH),
+    match(PT, IT).
+
+% --- Match structures
+match(Pattern, Input) :-
+    compound(Pattern),
+    compound(Input),
+    functor(Pattern, F, N),
+    functor(Input, F, N),
+    match_args(N, Pattern, Input).
+
+% --- Match arguments of compound terms
+match_args(0, _, _) :- !.
+match_args(N, P, I) :-
+    N > 0,
+    arg(N, P, PArg),
+    arg(N, I, IArg),
+    match(PArg, IArg),
+    N1 is N - 1,
+    match_args(N1, P, I).
