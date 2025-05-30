@@ -1,0 +1,17 @@
+% --- Check if a character is a vowel (lowercase and uppercase)
+is_vowel(a).
+is_vowel(e).
+is_vowel(i).
+is_vowel(o).
+is_vowel(u).
+is_vowel(A) :- char_type(A, upper), char_lower(A, L), is_vowel(L).
+
+% --- Main predicate to count vowels in a list of characters
+count_vowels([], 0).
+count_vowels([H|T], Count) :-
+    is_vowel(H),
+    count_vowels(T, Rest),
+    Count is Rest + 1.
+count_vowels([H|T], Count) :-
+    \+ is_vowel(H),
+    count_vowels(T, Count).
