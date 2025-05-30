@@ -1,0 +1,29 @@
+% Facts: bird(Name), and can_fly(Name) or cannot_fly(Name)
+
+% Define bird species
+bird(sparrow).
+bird(eagle).
+bird(penguin).
+bird(ostrich).
+bird(parrot).
+bird(kiwi).
+bird(peacock).
+
+% Birds that cannot fly
+cannot_fly(penguin).
+cannot_fly(ostrich).
+cannot_fly(kiwi).
+
+% Rule: If it's a bird and it's not in the cannot_fly list, it can fly
+can_fly(Bird) :- 
+    bird(Bird), 
+    \+ cannot_fly(Bird).
+
+% Ask user if a bird can fly or not
+can_this_bird_fly(Bird) :-
+    ( can_fly(Bird) ->
+        format('Yes, the ~w can fly.~n', [Bird])
+    ; cannot_fly(Bird) ->
+        format('No, the ~w cannot fly.~n', [Bird])
+    ; format('~w is not recognized as a bird in the database.~n', [Bird])
+    ).
