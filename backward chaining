@@ -1,0 +1,42 @@
+% --- Basic Facts ---
+has_feathers(tweety).
+lays_eggs(tweety).
+
+has_fur(tom).
+has_milk(tom).
+eats_meat(tom).
+has_claws(tom).
+has_sharp_teeth(tom).
+
+% --- Rules: using backward chaining ---
+
+is_bird(X) :-
+    has_feathers(X),
+    lays_eggs(X).
+
+is_mammal(X) :-
+    has_fur(X),
+    has_milk(X).
+
+is_carnivore(X) :-
+    is_mammal(X),
+    eats_meat(X),
+    has_claws(X),
+    has_sharp_teeth(X).
+
+% --- Diagnosis Query ---
+
+animal_type(X, bird) :-
+    is_bird(X).
+
+animal_type(X, carnivore) :-
+    is_carnivore(X).
+
+animal_type(X, mammal) :-
+    is_mammal(X).
+
+% --- Query Interface ---
+
+diagnose(X) :-
+    animal_type(X, Type),
+    format('~w is a ~w.~n', [X, Type]).
