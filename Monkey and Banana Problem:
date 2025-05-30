@@ -1,0 +1,38 @@
+% State representation: state(MonkeyPos, MonkeyOnBox, BoxPos, HasBanana)
+% MonkeyPos and BoxPos can be one of: middle, left, right
+% MonkeyOnBox is either 'onbox' or 'onfloor'
+% HasBanana is either 'yes' or 'no'
+
+% Initial state
+initial_state(state(left, onfloor, middle, no)).
+
+% Goal state
+goal_state(state(_, onbox, middle, yes)).
+
+% Move actions
+move(state(MP, onfloor, BP, HB), walk(MP, NP), state(NP, onfloor, BP, HB)) :-
+    MP \= NP.
+
+move(state(P, onfloor, P, HB), push(P, NP), state(NP, onfloor, NP, HB)) :-
+    P \= NP.
+
+move(state(P, onfloor, P, HB), climb, state(P, onbox, P, HB)).
+
+move(state(middle, onbox, middle, no), grasp, state(middle, onbox, middle, yes)).
+
+% Plan finder
+plan(State, [], State) :-
+    goal_state(State).
+
+plan(State1, [Action | Rest], State3) :-
+    move(State1, Action, State2),
+    plan(State2, Rest, State3).
+
+% Entry point
+solve :-
+    initial_state(InitialState),
+    plan(InitialState, Plan, FinalState),
+    write('Plan to reach the banana: '), nl,
+    write(Plan), nl,
+    write('Final State: '), nl,
+    write(FinalState), nl.
